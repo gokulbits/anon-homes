@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         blog: resolve(import.meta.dirname, 'blog-budget-homes-kerala/index.html'),
+        notFound: resolve(import.meta.dirname, '404.html'),
       },
     },
   },
