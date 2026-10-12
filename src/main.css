@@ -1,0 +1,255 @@
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "tailwindcss";
+
+@theme {
+  /* sampled from the logo: the "a" mark and the "homes" wordmark.
+     brand is a hair darker than the sample so it passes contrast as text */
+  --color-brand: #1794cc;
+  --color-brand-600: #127fb2;
+  --color-brand-800: #0c4f72;
+  --color-steel: #687880;
+  --color-steel-300: #b9c2c6;
+  --color-steel-700: #4f5d65; /* logo grey, darkened for small text */
+
+  --color-print: #0b3550;
+  --color-print-900: #072538;
+  --color-ink: #12191e;
+  --color-ink-800: #1b242a;
+  --color-concrete: #e6e9e8;
+  --color-paper: #f4f5f3;
+
+  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+  ::selection { @apply bg-brand text-white; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+  }
+}
+
+/* wide cut of Archivo for display type */
+@utility font-wide {
+  font-stretch: 112%;
+}
+@utility font-xwide {
+  font-stretch: 125%;
+}
+
+@utility wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @variant sm { padding-inline: 1.5rem; }
+  @variant lg { padding-inline: 2.5rem; }
+}
+
+/* drawing-sheet label, e.g. A-01 */
+@utility sheet-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@utility bg-blueprint {
+  background-color: var(--color-print);
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(rgb(255 255 255 / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.03) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+}
+
+/* L-shaped crop marks on all four corners, colour from currentColor */
+@utility corners {
+  --c: 14px;
+  background:
+    linear-gradient(currentColor, currentColor) top left / var(--c) 1px no-repeat,
+    linear-gradient(currentColor, currentColor) top left / 1px var(--c) no-repeat,
+    linear-gradient(currentColor, currentColor) top right / var(--c) 1px no-repeat,
+    linear-gradient(currentColor, currentColor) top right / 1px var(--c) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom left / var(--c) 1px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom left / 1px var(--c) no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / var(--c) 1px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right / 1px var(--c) no-repeat;
+}
+
+@layer components {
+  /* dimension line: |——— label ———| */
+  .dim {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 14px;
+  }
+  .dim::before,
+  .dim::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: currentColor;
+  }
+  .dim::before { left: 0; }
+  .dim::after { right: 0; }
+  .dim > .dim-line {
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left center;
+  }
+  .dim > .dim-label {
+    position: relative;
+    margin-inline: auto;
+    padding-inline: 0.625rem;
+    background: var(--dim-bg, var(--color-paper));
+  }
+
+  .dim-v {
+    position: relative;
+    width: 14px;
+  }
+  .dim-v::before,
+  .dim-v::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: currentColor;
+  }
+  .dim-v::before { top: 0; }
+  .dim-v::after { bottom: 0; }
+  .dim-v > .dim-line {
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    width: 1px;
+    background: currentColor;
+    transform-origin: center top;
+  }
+  .dim-v > .dim-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    rotate: -90deg;
+    white-space: nowrap;
+    padding-inline: 0.625rem;
+    background: var(--dim-bg, var(--color-paper));
+  }
+
+  /* underline that draws in from the left on hover */
+  .link-draw {
+    background: linear-gradient(currentColor, currentColor) left bottom / 0% 1px no-repeat;
+    transition: background-size 0.6s var(--ease-out-expo);
+  }
+  .link-draw:hover,
+  .link-draw:focus-visible,
+  .link-draw[aria-current="true"],
+  .link-draw[aria-current="page"] { background-size: 100% 1px; }
+  .link-draw[aria-current="true"],
+  .link-draw[aria-current="page"] { color: var(--color-ink); }
+
+  /* button with a fill that rises from the bottom edge */
+  .btn-fill {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .btn-fill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--fill, var(--color-ink));
+    transform: translateY(101%);
+    transition: transform 0.55s var(--ease-out-expo);
+  }
+  .btn-fill:hover::before,
+  .btn-fill:focus-visible::before { transform: translateY(0); }
+
+  .line-mask { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+  .line-mask > span { display: block; }
+
+  .field {
+    @apply w-full border-0 border-b border-white/20 bg-transparent px-0 pt-2 pb-3 text-base text-white placeholder:text-white/35 transition-colors;
+  }
+  .field:focus { @apply border-brand outline-none; }
+}
+
+/* hero intro runs in css so first paint never waits on javascript */
+@property --t {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@keyframes grid-draw { from { scale: 1 0; } }
+@keyframes pop { from { scale: 0; } }
+@keyframes rise { from { translate: 0 112%; } }
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes frame-rise { from { --t: 100%; } to { --t: 0%; } }
+@keyframes settle { from { scale: 1.3; } }
+@keyframes draw-x { from { scale: 0 1; } }
+
+[data-grid-line] {
+  transform-origin: top;
+  animation: grid-draw 1.8s var(--ease-in-out-expo) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+[data-grid-bubble] {
+  animation: pop 0.9s var(--ease-out-expo) both;
+  animation-delay: calc(300ms + var(--i, 0) * 70ms);
+}
+:nth-child(2) > [data-grid-line], :nth-child(2) > [data-grid-bubble] { --i: 1; }
+:nth-child(3) > [data-grid-line], :nth-child(3) > [data-grid-bubble] { --i: 2; }
+:nth-child(4) > [data-grid-line], :nth-child(4) > [data-grid-bubble] { --i: 3; }
+:nth-child(5) > [data-grid-line], :nth-child(5) > [data-grid-bubble] { --i: 4; }
+
+.hero-line > span {
+  animation: rise 1.4s var(--ease-out-expo) both;
+  animation-delay: calc(200ms + var(--i, 0) * 100ms);
+}
+[data-hero-frame] { animation: frame-rise 1.6s var(--ease-in-out-expo) 450ms both; }
+[data-hero-img] { animation: settle 2.4s var(--ease-out-expo) 450ms both; }
+[data-hero-dim-h] .dim-line { animation: draw-x 1.4s var(--ease-in-out-expo) 700ms both; }
+[data-hero-dim-h] .dim-label { animation: wipe 1s var(--ease-out-expo) 1.3s both; }
+[data-wipe] {
+  animation: wipe 1.3s var(--ease-in-out-expo) both;
+  animation-delay: calc(350ms + var(--i, 0) * 80ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+}
